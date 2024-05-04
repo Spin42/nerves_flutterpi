@@ -1,0 +1,6 @@
+%{
+  "elixir_make": {:hex, :elixir_make, "0.8.3", "d38d7ee1578d722d89b4d452a3e36bcfdc644c618f0d063b874661876e708683", [:mix], [{:castore, "~> 0.1 or ~> 1.0", [hex: :castore, repo: "hexpm", optional: true]}, {:certifi, "~> 2.0", [hex: :certifi, repo: "hexpm", optional: true]}], "hexpm", "5c99a18571a756d4af7a4d89ca75c28ac899e6103af6f223982f09ce44942cc9"},
+  "muontrap": {:hex, :muontrap, "1.2.0", "d6f458978d3ecfc8801a48ef3720f0d51bc1782dec44c40ad4d8ef522320905d", [:make, :mix], [{:elixir_make, "~> 0.6", [hex: :elixir_make, repo: "hexpm", optional: false]}], "hexpm", "7702c219a5ae0e9daad1e00eb7d45b9796d362d97abbbd73a31fb172411dc284"},
+  "nimble_options": {:hex, :nimble_options, "0.5.2", "42703307b924880f8c08d97719da7472673391905f528259915782bb346e0a1b", [:mix], [], "hexpm", "4da7f904b915fd71db549bcdc25f8d56f378ef7ae07dc1d372cbe72ba950dce0"},
+  "wait_for_it": {:hex, :wait_for_it, "2.1.2", "6fab134097dd4446f1590f4b5409247be6c0eeab9d24569f665b5bf0b57cb1b7", [:mix], [], "hexpm", "c47be5ad9db9c24ef28d24dc27977243b8bc7ca366bf3e36d56af0093ef257d1"},
+}
