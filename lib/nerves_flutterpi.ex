@@ -18,8 +18,10 @@ defmodule NervesFlutterpi do
   def start_link(opts) do
     opts = NimbleOptions.validate!(opts, @schema)
 
-    task = Task.async(fn -> wait_for_drm_device() end)
-    :ok = Task.await(task)
+    timeout = opt[:timeout] || 15000
+
+    task = Task.async(fn -> wait_for_drm_device(timeout) end)
+    :ok = Task.await(task, timeout)
     Supervisor.start_link(__MODULE__, opts, name: opts[:name])
   end
 
@@ -36,7 +38,7 @@ defmodule NervesFlutterpi do
     Supervisor.init(children, strategy: :one_for_all)
   end
 
-  defp wait_for_drm_device() do
+  defp wait_for_drm_device(timeout) do
     NervesUEvent.subscribe(["devices", "platform", "gpu", "drm", "card1"])
 
     Logger.info("Waiting for DRM device to be ready...")
@@ -44,7 +46,7 @@ defmodule NervesFlutterpi do
       value ->
         Logger.info("DRM device is ready, launching infotainment application...")
         :ok
-      15000 ->
+      ^timeout ->
         Logger.info("DRM device not detected, aborting...")
         :error
     end
