@@ -1,7 +1,7 @@
 defmodule NervesFlutterpi do
   use Supervisor
 
-  require WaitForIt
+  require Logger
 
   @definition [
     name: [
@@ -18,7 +18,16 @@ defmodule NervesFlutterpi do
   def start_link(opts) do
     opts = NimbleOptions.validate!(opts, @schema)
 
-    Supervisor.start_link(__MODULE__, opts, name: opts[:name])
+    NervesUEvent.subscribe(["devices", "platform", "gpu", "drm", "card1"])
+
+    Logger.info("Waiting for DRM device to be ready...")
+    receive do
+      value ->
+        Logger.info("DRM device is ready, launching infotainment application...")
+        Supervisor.start_link(__MODULE__, opts, name: opts[:name])
+      15000 ->
+        Logger.info("DRM device not detected, aborting...")
+    end
   end
 
   @impl Supervisor
