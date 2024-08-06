@@ -18,16 +18,9 @@ defmodule NervesFlutterpi do
   def start_link(opts) do
     opts = NimbleOptions.validate!(opts, @schema)
 
-    NervesUEvent.subscribe(["devices", "platform", "gpu", "drm", "card1"])
-
-    Logger.info("Waiting for DRM device to be ready...")
-    receive do
-      value ->
-        Logger.info("DRM device is ready, launching infotainment application...")
-        Supervisor.start_link(__MODULE__, opts, name: opts[:name])
-      15000 ->
-        Logger.info("DRM device not detected, aborting...")
-    end
+    task = Task.async(fn -> wait_for_drm_device() end)
+    :ok = Task.await(task)
+    Supervisor.start_link(__MODULE__, opts, name: opts[:name])
   end
 
   @impl Supervisor
@@ -41,5 +34,19 @@ defmodule NervesFlutterpi do
       Supervisor.child_spec({MuonTrap.Daemon, ["flutter-pi", [release, opts[:flutter_app_dir]]]}, id: :flutterpi)
     ]
     Supervisor.init(children, strategy: :one_for_all)
+  end
+
+  defp wait_for_drm_device() do
+    NervesUEvent.subscribe(["devices", "platform", "gpu", "drm", "card1"])
+
+    Logger.info("Waiting for DRM device to be ready...")
+    receive do
+      value ->
+        Logger.info("DRM device is ready, launching infotainment application...")
+        :ok
+      15000 ->
+        Logger.info("DRM device not detected, aborting...")
+        :error
+    end
   end
 end
