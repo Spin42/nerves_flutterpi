@@ -18,7 +18,7 @@ defmodule NervesFlutterpi do
   def start_link(opts) do
     opts = NimbleOptions.validate!(opts, @schema)
 
-    timeout = opt[:timeout] || 15000
+    timeout = opts[:timeout] || 15000
 
     task = Task.async(fn -> wait_for_drm_device(timeout) end)
     :ok = Task.await(task, timeout)
