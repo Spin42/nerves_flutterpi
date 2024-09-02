@@ -39,7 +39,7 @@ defmodule NervesFlutterpi do
   end
 
   defp wait_for_drm_device(timeout) do
-    NervesUEvent.subscribe(["devices", "platform", "gpu", "drm", "card1"])
+    NervesUEvent.subscribe(["devices", "platform", :_, :_, :_, "card1"])
 
     Logger.info("Waiting for DRM device to be ready...")
     receive do
